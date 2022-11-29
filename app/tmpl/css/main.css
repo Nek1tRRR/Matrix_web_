@@ -1,0 +1,138 @@
+/*общте стили*/
+
+
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    font-family: 'Roboto', sans-serif;
+}
+body {
+    background: #464846;
+}
+
+input:active, input:focus{
+    outline: none !important;
+}
+/************************************/
+@font-face {
+    font-family: 'matrix-font';
+    src: url(/app/tmpl/css/Matrix-MZ4p.ttf);
+}
+.flex-middle{
+    display: flex;
+    align-items: center;
+}
+.flex-between{
+    display: flex;
+    justify-content: space-between;
+}
+.center-block{
+    width: 70%;
+    margin: 0 15%;
+    height: inherit;
+}
+.white-block {
+    width: calc(100% - 2vw);
+    background: #fff;
+    padding: 1vw;
+    -webkit-border-radius: .2vw;
+    -moz-border-radius: .2vw;
+    border-radius: .2vw;
+    border: .03vw solid rgba(227,228,232,.2);
+}
+
+input.input-data {
+    width: calc(100% - 2vw);
+    border: .03vw solid rgba(0,0,0,.1);
+    height: 2vw;
+    padding: 0 1vw;
+    border-radius: .2vw;
+    margin: .5vw 0;
+}
+
+.sub-block input {
+    padding: 0 1vw;
+    height: 2vw;
+    border: .03vw solid rgba(227,228,232,.2);
+    background: greenyellow;
+}
+
+
+
+
+
+
+
+
+
+/************************************/
+/*верхний модуль*/
+
+#top-container {
+    width: 100%;
+    height: 3vw;
+    background: limegreen;
+    position: fixed;
+    z-index: 999;
+}
+
+.link-to-start{
+    color: black;
+    font-size: 1.4vw;
+    font-family: matrix-font;
+}
+
+#eng-version a {
+    color: black;
+    font-size: 1vw;
+    font-family: matrix-font;
+}
+
+#top-container .search-block {
+    width: 30%;
+    height: 2vw;
+}
+
+#top-container .search-block input {
+    width: calc(100% - 2vw);
+    height: 100%;
+    border: 0;
+    -webkit-border-radius: 1vw;
+    padding: 0 1vw;
+    padding-left: 3vw;
+    background-image: url(/app/tmpl/img/menu/search.png);
+    -webkit-background-size: 1vw;
+    background-size: 1vw;
+    background-repeat: no-repeat;
+    background-position: 1vw center;
+    font-size: .8vw;
+}
+
+/************************************/
+/*Главный блок*/
+
+.page {
+    min-height: 100vh;
+    position: absolute;
+    top:  5vw;
+    width: 100%;
+    z-index: 1;
+}
+
+/************************************/
+/*Начальная страница*/
+
+#start-page .left-container {
+    width: 75%;
+    min-height: 100vh;
+}
+
+#start-page .right-container {
+    width: 20%;
+    min-height: 100vh;
+}
+
+#start-page .left-container
+
