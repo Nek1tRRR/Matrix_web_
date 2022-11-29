@@ -1,15 +1,19 @@
 <?php
-// запуск сессии
 session_start();
-
 include "Router.php";
 Router::url($_SERVER['REQUEST_URI']);
 $_SESSION['page']['class'] = $class = Router::classInc();
 $_SESSION['page']['method'] = $method = Router::methodInc();
 $_SESSION['page']['params'] = $params = Router::paramsInc();
 
-include 'core/classes/Main.php';
-$Page = 'core/classes/' . $_SESSION['page']['class'] . '.php';
+
+if($class == 'action')
+{
+    $Page = 'core/actions/' . $_SESSION['page']['class'] . '.php';
+}else{
+    include 'core/classes/Main.php';
+    $Page = 'core/classes/' . $_SESSION['page']['class'] . '.php';
+}
 if(file_exists($Page))
 {
     $method = '_' . $method . '_';
