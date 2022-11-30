@@ -47,7 +47,9 @@ input:active, input:focus{
     border-radius: .2vw;
     border: .03vw solid rgba(227,228,232,.2);
     margin-bottom: 1vw;
+    color: limegreen;
 }
+
 
 .input-data {
     width: calc(100% - 2vw);
@@ -64,7 +66,7 @@ select:hover{
 }
 
 .sub-block input {
-    padding: 0 1vw;
+    padding: 0 2vw;
     height: 2vw;
     border: .03vw solid rgba(227,228,232,.2);
     background: limegreen;
@@ -73,6 +75,7 @@ select:hover{
     border-radius: .2vw;
     color: #000;
     font-size: .8vw;
+    margin: 0 auto;
 }
 
 .sub-block input:hover{
@@ -180,10 +183,33 @@ select:hover{
 }
 
 #start-page .left-container .big-img-friends {
-    width: 100%;
-    height: 100%;
+    /*width: 100%;*/
+    /*height: 100%;*/
     margin: 3vw 0;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.big-img-friends {
+    width: 500px;
+    height: 500px;
+    display: flex;
+}
+/********************************************************************************************************************/
+/*******************************************************************************************************************/
+/*Страница авторизации*/
+
+.form-authorization {
+    width: 50%;
+    margin: 0 25%;
+}
+
+.form-authorization .title-block {
+    font-size: 1vw;
+    text-align: center;
+}
+
+.form-authorization .sub-block input {
+    margin: 0 auto;
 }

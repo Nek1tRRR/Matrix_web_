@@ -9,7 +9,7 @@ $_SESSION['page']['params'] = $params = Router::paramsInc();
 
 if($class == 'action')
 {
-    $Page = 'core/actions/' . $_SESSION['page']['class'] . '.php';
+    $Page = 'core/actions/action.php';
 }else{
     include 'core/classes/Main.php';
     $Page = 'core/classes/' . $_SESSION['page']['class'] . '.php';

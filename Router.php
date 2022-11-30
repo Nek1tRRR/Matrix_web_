@@ -19,6 +19,7 @@ class Router
 
     public static function  classInc()
     {
+        //строка запроса имеет следующий вид: класс?метод=параметры
         $end = strpos(self::$url, '?');
         if (!empty($end))
         {
@@ -30,8 +31,7 @@ class Router
     public static function methodInc()
     {
         $start = strpos(self::$url,'?');
-        $end = strpos(self::$url,'?');
-
+        $end = strpos(self::$url,'=');
         if(!empty($start))
         {
             if(empty($end))
@@ -41,7 +41,6 @@ class Router
             else{
                 return self::$method = substr(self::$url, $start + 1, $end - $start - 1);
             }
-
         }else{
             return self::$method = 'main';
         }

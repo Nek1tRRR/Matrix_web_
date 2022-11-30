@@ -2,7 +2,7 @@
 
 abstract class Main
 {
-    protected $db;
+    protected $db, $config = [];
     public function __construct()
     {
         include "core/controllers/DB.php";
@@ -43,9 +43,9 @@ abstract class Main
 
     protected function page ($page)
     {
-        if(file_exists('app/tmpl/pages/' . $page . '/' . $this -> config['PAGE']['method'] . '.php'))
+        if(file_exists('app/tmpl/pages/' . $this -> config['PAGE']['class'] . '/' . $page . '.php'))
         {
-            include 'app/tmpl/pages/' . $page . '/' . $this -> config['PAGE']['method'] . '.php';
+            include 'app/tmpl/pages/' . $this -> config['PAGE']['class'] . '/' . $page . '.php';
         }
     }
 

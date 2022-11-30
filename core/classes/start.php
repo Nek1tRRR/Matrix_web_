@@ -6,8 +6,7 @@ class start extends Main
     {
         $this -> header ();
         $this -> module ('top-container');
-        $this -> page( 'start');
-
+        $this -> page( 'main');
         $this -> footer();
     }
 }
