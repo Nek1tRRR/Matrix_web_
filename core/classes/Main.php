@@ -2,13 +2,17 @@
 
 abstract class Main
 {
-    protected $db, $config = [];
+    protected $db, $config = [], $user;
     public function __construct()
     {
         include "core/controllers/DB.php";
+        include "core/controllers/User.php";
         $this -> config = include 'core/config/default.php';
         $this -> config['PAGE'] = ['class' => $_SESSION['page']['class'], 'method' => $_SESSION['page']['method'], 'params' => $_SESSION['page']['params']];
+
         $this -> db = new DB($this -> config['DB']['name'], $this -> config['DB']['user'], $this -> config['DB']['pass'], $this -> config['DB']['host'], $this -> config['DB']['type'],);
+
+        $this -> user = new User();
 
     }
     protected function header()
@@ -28,6 +32,10 @@ abstract class Main
 
     public function titlePage()
     {
+        if($this -> config['PAGE']['class'] == 'profile' and $this -> config['PAGE']['method'] == 'main')
+        {
+            return $this -> user -> name . " " . $this -> user -> surname;
+        }
         $query = $this -> db -> getRow( "SELECT `title` FROM `title_page` WHERE `class` = ? and `method` = ? and `params` = ?", [$this -> config['PAGE']['class'], $this -> config['PAGE']['method'], $this -> config['PAGE']['params']]);
         return $query['title'];
     }
@@ -47,6 +55,12 @@ abstract class Main
         {
             include 'app/tmpl/pages/' . $this -> config['PAGE']['class'] . '/' . $page . '.php';
         }
+    }
+
+    public function sess_info_destroy()
+    {
+        if (!empty($_SESSION['info']))
+            unset($_SESSION['info']);
     }
 
 }

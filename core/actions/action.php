@@ -35,12 +35,19 @@ class action
         }
         elseif ($_POST['step'] == 'finish')
         {
-            $query = $this -> db -> insertRow("INSERT INTO `users` (`login`, `email`, `password`, `name`, `surname`, `birthday`) VALUES (?,?,?,?,?,?)", [$_SESSION['user']['sess_email'], $_SESSION['user']['sess_email'], $_SESSION['user']['sess_password'],$_SESSION['user']['sess_name'],$_SESSION['user']['sess_surname'],$_SESSION['user']['sess_birthday']]);
-            if($query)
+            $query = $this -> db ->getRow("SELECT `id` FROM `users` WHERE `email` = ? or `login`", [$_SESSION['user']['sess_email'], $_POST['login']]);
+            if(empty($query['id']))
             {
-                $a = strpos($_SESSION['user']['email'], '@');
-                $login = substr($_SESSION['user']['email'], 0, $a);
-                echo $login;
+                $_SESSION['user']['sess_password'] = md5( $_POST['password'] . $_POST['login']);
+                $query = $this -> db -> insertRow("INSERT INTO `users` (`login`, `email`, `password`, `name`, `surname`, `birthday`) VALUES (?,?,?,?,?,?)", [$_POST['login'], $_SESSION['user']['sess_email'], $_SESSION['user']['sess_password'],$_SESSION['user']['sess_name'],$_SESSION['user']['sess_surname'],$_SESSION['user']['sess_birthday']]);
+                if($query) {
+                    $query = $this->db->getRow("SELECT `id` FROM `users` WHERE `login` = ? and `password` = ?", [$_POST['login'], $_SESSION['user']['sess_password']]);
+                    $_SESSION['user']['id'] = $query['id'];
+                    $a = strpos($_SESSION['user']['sess_email'], '@');
+                    echo json_encode(['ok', $_POST['login']]);
+                }
+            }else{
+                echo 'user exists';
             }
         }
     }
@@ -49,10 +56,43 @@ class action
     {
         if($_POST['pin'] == $_SESSION['user']['sess_pin'])
         {
-            $_SESSION['user']['sess_password'] = md5($_POST['pin'] . $_SESSION['user']['email']);
+//            $_SESSION['user']['sess_password'] = md5($_POST['pin'] . $_SESSION['user']['email']);
             echo 'ok';
         }else{
             echo false;
         }
     }
+
+    public function _exit_()
+    {
+        session_destroy();
+        header( "Location: /start");
+    }
+
+    public function _auth_()
+    {
+        $password = md5($_POST['password'] . $_POST['login']);
+        include 'core/controllers/DB.php';
+        $this -> config = include 'core/config/default.php';
+        $this -> db = new DB($this -> config['DB']['name'], $this -> config['DB']['user'], $this -> config['DB']['pass'], $this -> config['DB']['host'], $this -> config['DB']['type']);
+        $query = $this -> db -> getRow("SELECT `id` FROM `users` WHERE `login` = ? and `password` = ?", [$_POST['login'],$password]);
+        if(!empty($query['id']))
+        {
+            $_SESSION['user']['id'] = $query['id'];
+            echo json_encode(['ok', $_POST['login']]);
+        }else{
+            echo 'User is not exist';
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

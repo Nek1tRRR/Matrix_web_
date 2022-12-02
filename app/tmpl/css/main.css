@@ -134,7 +134,55 @@ select:hover{
     background-repeat: no-repeat;
     background-position: 1vw center;
     font-size: .8vw;
+}
 
+#top-container .top-list-nav {
+    color: #000;
+    font-size: 1vw;
+}
+
+#top-container .top-list-nav img {
+    height: 2vw;
+    margin-left: 1vw;
+}
+
+#top-container .top-list-nav li:last-child:hover, #top-container .top-list-nav img:hover {
+    cursor: pointer;
+}
+
+#top-container .top-list-nav #top-controll {
+    position: absolute;
+    background: #009002;
+    -webkit-border-radius: .2vw;
+    -moz-border-radius: .2vw;
+    border-radius: .2vw;
+    box-shadow: 0 0 0 .1vw rgba(0,0,0, .02);
+    margin-top: .5vw;
+    display: none;
+}
+
+#top-container .top-list-nav li {
+    margin-left: 2vw;
+}
+
+#top-container .top-list-nav li:last-child {
+    margin-left: 4vw;
+}
+
+#top-container .top-list-nav #top-controll li {
+    margin: .5vw 0;
+    padding: .4vw 0;
+}
+
+#top-container .top-list-nav #top-controll li:first-child {
+    border-bottom: .05vw solid #000;
+}
+
+#top-container .top-list-nav #top-controll a {
+    color: black;
+    text-align: center;
+    font-size: 1vw;
+    padding: 0 2vw;
 }
 
 /********************************************************************************************************************/
@@ -213,3 +261,19 @@ select:hover{
 .form-authorization .sub-block input {
     margin: 0 auto;
 }
+
+.form-authorization .info-text {
+    width: calc(100% - 2vw);
+    background: #0a2b1d;
+    border: .05vw solid;
+    font-size: 1vw;
+    padding: .5vw 1vw;
+    text-align: center;
+    margin: .5vw 0;
+    color: rgb(17, 236, 7);
+}
+
+
+/********************************************************************************************************************/
+/*******************************************************************************************************************/
+/*Страница пользователя*/
