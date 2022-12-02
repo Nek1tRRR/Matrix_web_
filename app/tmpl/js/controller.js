@@ -54,21 +54,74 @@ var registration = function (step){
         })
     }
     else if(step == 'finish') {
-        var password = $("#password").val(),
+        var login = $("#login").val(),
+            password = $("#password").val(),
             r_password = $("#r-password").val();
 
         if(password == r_password){
             $.ajax({
                 url: 'http://' + location.hostname + '/action?registration',
                 type: 'POST',
-                data: {step: 'finish', password: password},
+                data: {step: 'finish', password: password, login: login},
+                dataType: 'json',
                 error: function () {
 
                 },
                 success: function (res) {
-                    location.href = 'http://' + location.hostname + '/@' + res;
+                    if(res[0] == 'ok'){
+                        location.href = 'http://' + location.hostname + '/@' + res[1];
+                    }
+                    else if(res[0] == 'user exists'){
+                        alert(res[0]);
+                    }
+
                 }
             })
         }
     }
+};
+
+var auth = function (){
+    var login = $("#login").val(),
+        password = $("#password").val();
+    $.ajax({
+        url: 'http://' + location.hostname + '/action?auth',
+        type: 'POST',
+        data: {login: login, password: password},
+        dataType: 'json',
+        error: function () {
+
+        },
+        success: function (res) {
+            if (res[0] == 'ok') {
+                location.href = 'http://' + location.hostname + '/@' + res[1];
+            }
+            else if(res[0] == 'User is not exist'){
+                alert(res[0])
+            }
+        }
+    })
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
