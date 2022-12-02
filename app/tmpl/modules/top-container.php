@@ -6,7 +6,7 @@
             </a>
         </div>
         <div class = 'search-block'>
-            <input type = 'search' id = 'search'placeholder = 'Поиск...' required>
+            <input type = 'search' id = 'search' placeholder = 'Поиск...' required>
         </div>
         <?php
             if (empty($_SESSION['user']['id'])) {
@@ -46,7 +46,7 @@
         ?>
     </div>
 </div>
-<!--        <div class = "middle-container">-->
+    <!--    <div class = "middle-container">-->
 <!--        <div class = "logotype">-->
 <!--            <a class = "a-block" href = "--><?//=$this -> config['SITE_URL']?><!--start"></a>-->
 <!--        </div>-->
