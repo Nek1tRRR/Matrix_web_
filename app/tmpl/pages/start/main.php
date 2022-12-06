@@ -25,7 +25,6 @@
                         <option selected>Ваш пол</option>
                         <option>Мужской</option>
                         <option>Женский</option>
-                        <option>Attack Helicopter</option>
                     </select>
                     <div class = 'sub-block flex-between flex-middle'>
                         <input type = 'submit' value = 'Зарегистрироваться'>

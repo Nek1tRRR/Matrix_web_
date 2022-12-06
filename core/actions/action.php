@@ -5,7 +5,7 @@ class action
     protected $db, $config;
     public function _registration_()
     {
-        include 'core/controllers/DB.php';
+        include "core/controllers/DB.php";
         $this -> config = include 'core/config/default.php';
         $this -> db = new DB($this -> config['DB']['name'], $this -> config['DB']['user'], $this -> config['DB']['pass'], $this -> config['DB']['host'], $this -> config['DB']['type']);
         if($_POST['step'] == 1)
@@ -13,6 +13,7 @@ class action
             $_SESSION['user']['sess_name'] = trim($_POST['name']);
             $_SESSION['user']['sess_surname'] = trim($_POST['surname']);
             $_SESSION['user']['sess_birthday'] = trim($_POST['birthday']);
+//            $_SESSION['user']['sess_sex'] = trim($_POST['sex']);
             echo 'ok';
         }
         elseif ($_POST['step'] == 2)
@@ -35,9 +36,10 @@ class action
         }
         elseif ($_POST['step'] == 'finish')
         {
-            $query = $this -> db ->getRow("SELECT `id` FROM `users` WHERE `email` = ? or `login`", [$_SESSION['user']['sess_email'], $_POST['login']]);
-            if(empty($query['id']))
-            {
+//            if($_SESSION['user']['sess_sex'] == 'Мужской') $sex = 'male';
+//            elseif($_SESSION['user']['sess_sex'] == 'Женский') $sex = 'female';
+            $query = $this -> db ->getRow("SELECT `id` FROM `users` WHERE `email` = ? || `login` = ?", [$_SESSION['user']['sess_email'], $_POST['login']]);
+            if(empty($query['id'])) {
                 $_SESSION['user']['sess_password'] = md5( $_POST['password'] . $_POST['login']);
                 $query = $this -> db -> insertRow("INSERT INTO `users` (`login`, `email`, `password`, `name`, `surname`, `birthday`) VALUES (?,?,?,?,?,?)", [$_POST['login'], $_SESSION['user']['sess_email'], $_SESSION['user']['sess_password'],$_SESSION['user']['sess_name'],$_SESSION['user']['sess_surname'],$_SESSION['user']['sess_birthday']]);
                 if($query) {
@@ -47,7 +49,7 @@ class action
                     echo json_encode(['ok', $_POST['login']]);
                 }
             }else{
-                echo 'user exists';
+                echo json_encode(['user exists']);
             }
         }
     }
@@ -56,7 +58,6 @@ class action
     {
         if($_POST['pin'] == $_SESSION['user']['sess_pin'])
         {
-//            $_SESSION['user']['sess_password'] = md5($_POST['pin'] . $_SESSION['user']['email']);
             echo 'ok';
         }else{
             echo false;
@@ -72,10 +73,10 @@ class action
     public function _auth_()
     {
         $password = md5($_POST['password'] . $_POST['login']);
-        include 'core/controllers/DB.php';
+        include "core/controllers/DB.php";
         $this -> config = include 'core/config/default.php';
         $this -> db = new DB($this -> config['DB']['name'], $this -> config['DB']['user'], $this -> config['DB']['pass'], $this -> config['DB']['host'], $this -> config['DB']['type']);
-        $query = $this -> db -> getRow("SELECT `id` FROM `users` WHERE `login` = ? and `password` = ?", [$_POST['login'],$password]);
+        $query = $this -> db -> getRow("SELECT `id` FROM `users` WHERE `login` = ? and `password` = ?", [$_POST['login'], $password]);
         if(!empty($query['id']))
         {
             $_SESSION['user']['id'] = $query['id'];

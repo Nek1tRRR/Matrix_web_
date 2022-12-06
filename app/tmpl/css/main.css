@@ -159,6 +159,7 @@ select:hover{
     box-shadow: 0 0 0 .1vw rgba(0,0,0, .02);
     margin-top: .5vw;
     display: none;
+    z-index: 999;
 }
 
 #top-container .top-list-nav li {
@@ -296,6 +297,18 @@ select:hover{
     align-items: flex-end;
 }
 
+.profile-header .user-avatar-container .grey .download-big-avatar {
+    width: 2vw;
+    position: absolute;
+    top: 1vw;
+    left: 80%;
+    display: none;
+}
+
+.profile-header .user-avatar-container .grey:hover .download-big-avatar {
+    display: block;
+}
+
 .profile-header .user-avatar-container .user-name {
     position: absolute;
     margin-left: 20vw;
@@ -323,6 +336,37 @@ select:hover{
     width: 15vw;
 }
 
+.main-user-menu-container .user-main-avatar .controll-avatar-block {
+    position: absolute;
+    bottom: 0;
+    background: #013301;
+    width: calc(100% - .4vw);
+    height: 0;
+    opacity: 0;
+}
+
+.main-user-menu-container .user-main-avatar:hover .controll-avatar-block {
+    height: auto;
+    opacity: 1;
+    transition: all 1s;
+}
+
+.controll-avatar-block li {
+    text-align: center;
+    color: #dbffd8;
+    font-size: .8vw;
+    padding: .2vw;
+}
+
+.controll-avatar-block li:hover {
+    cursor: pointer;
+    color: #009002;
+}
+
+.main-user-menu-container .user-main-avatar img{
+    cursor: pointer;
+}
+
 .main-user-menu-container .main-menu-list{
     float: right;
     margin: 2vw 0;
@@ -337,3 +381,100 @@ select:hover{
 .main-user-menu-container .main-menu-list li a:hover {
     border-bottom: .05vw solid #1dc116;
 }
+
+#user-page .middle-main-container {
+    width: 100%;
+    margin-top: 6.5vw;
+}
+
+#user-page .left-container {
+    width: 26%;
+}
+
+#user-page .left-container .left-nav a {
+    display: inline-block;
+    padding: .5vw 0;
+    width: 90%;
+    margin: 0 5%;
+    background: #009002;
+    font-size: 1vw;
+    text-align: center;
+    color: #dbffd8;
+    -webkit-border-radius: .2vw;
+    -moz-border-radius: .2vw;
+    border-radius: .2vw;
+}
+
+#user-page .right-container {
+    width: 73%;
+}
+
+#user-page .right-container #user-info-block .main-info {
+    border-bottom: .05vw solid #1dc116;
+    padding-bottom: 1vw;
+}
+
+#user-page .right-container #user-info-block .info-row {
+    width: 10vw;
+    font-size: .9vw;
+    color: rgb(17, 236, 7);
+}
+
+#user-page .right-container #user-info-block .lbl-row {
+    font-size: .9vw;
+    color: #1dc116;
+}
+
+#user-page .right-container #user-info-block .info-tr {
+    margin-bottom: .5vw;
+}
+
+#user-page .right-container .list-dop-info {
+    width: 80%;
+    margin: 0 10%;
+    padding-top: .5vw;
+}
+
+#user-page .right-container .list-dop-info .lbl {
+    text-align: center;
+    padding: .5vw;
+    border-radius: .2vw;
+}
+
+#user-page .right-container .list-dop-info .lbl:hover {
+    cursor: pointer;
+    background: #013301;
+}
+
+#user-page .right-container .list-dop-info .count {
+    font-size: 1.1vw;
+    font-weight: bold;
+    color: #1dc116;
+}
+
+#user-page .right-container .list-dop-info .inf {
+    font-size: .7vw;
+    color: #1dc116;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

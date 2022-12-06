@@ -3,7 +3,7 @@
 class User
 {
     protected $db, $config;
-    public $id, $login, $password, $email, $name, $surname, $birthday;
+    public $id, $login, $password, $email, $name, $surname, $birthday, $status, $city;
     public function __construct()
     {
         $this -> connect();
@@ -14,13 +14,15 @@ class User
         $this -> name();
         $this -> surname();
         $this -> birthday();
+        $this -> status();
+        $this -> city();
     }
 
     protected function connect()
     {
         include_once "core/controllers/DB.php";
         $this -> config = include 'core/config/default.php';
-        $this -> db = new DB($this -> config['DB']['name'], $this -> config['DB']['user'], $this -> config['DB']['pass'], $this -> config['DB']['host'], $this -> config['DB']['type'],);
+        $this -> db = new DB($this -> config['DB']['name'], $this -> config['DB']['user'], $this -> config['DB']['pass'], $this -> config['DB']['host'], $this -> config['DB']['type']);
 
     }
 
@@ -70,7 +72,19 @@ class User
     protected function birthday()
     {
         $query = $this -> db -> getRow("SELECT `birthday` FROM `users` WHERE `id` = ?", [$this -> id]);
-        return $this -> lbirthday = $query['birthday'];
+        return $this -> birthday = $query['birthday'];
+    }
+
+    protected function status()
+    {
+        $query = $this -> db -> getRow("SELECT `status` FROM `users` WHERE `id` = ?", [$this -> id]);
+        return $this -> status = $query['status'];
+    }
+
+    protected function city()
+    {
+        $query = $this -> db -> getRow("SELECT `city` FROM `users` WHERE `id` = ?", [$this -> id]);
+        return $this -> city = $query['city'];
     }
 
     public function big_avatar()

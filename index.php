@@ -1,10 +1,10 @@
 <?php
-session_start();
-include "Router.php";
-Router::url($_SERVER['REQUEST_URI']);
-$_SESSION['page']['class'] = $class = Router::classInc();
-$_SESSION['page']['method'] = $method = Router::methodInc();
-$_SESSION['page']['params'] = $params = Router::paramsInc();
+session_start();                                                //запуск сессии
+include "Router.php";                                           //подкл. файл маршрутизации
+Router::url($_SERVER['REQUEST_URI']);                           //из глобального массива SERVER получаем строку запроса и предаем методу url
+$_SESSION['page']['class'] = $class = Router::classInc();       //метод возвращающий имя подключаемого класса
+$_SESSION['page']['method'] = $method = Router::methodInc();    //метод возвращающий имя подключаемого метода класса
+$_SESSION['page']['params'] = $params = Router::paramsInc();    //метод возвращающий имя параметры метода
 
 
 if($class == 'action')
@@ -20,6 +20,6 @@ if(file_exists($Page))
     include $Page;
     $page = new $class();
     $page -> $method($params);
-}else{
+}else{ //если запрашивается несуществующий класс, то переход на главную страницу
     header("Location: /start");
 }
