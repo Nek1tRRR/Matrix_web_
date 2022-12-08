@@ -16,6 +16,8 @@ class User
         $this -> birthday();
         $this -> status();
         $this -> city();
+//        $this -> big_avatar();
+//        $this -> avatar();
     }
 
     protected function connect()
@@ -91,6 +93,12 @@ class User
     {
         $query = $this -> db -> getRow("SELECT `big_avatar` FROM `users` WHERE `id` = ?", [$this -> id]);
         return $query['big_avatar'];
+    }
+
+    public function bannerSRC()
+    {
+        $query = $this -> db -> getRow("SELECT `bannerSRC` FROM `users` WHERE `id` = ?", [$this -> id]);
+        return $query['bannerSRC'];
     }
 
     public function avatar()

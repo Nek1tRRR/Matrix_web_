@@ -2,8 +2,8 @@
     <div class = 'center-block'>
         <div class = 'profile-header'>
             <div class = 'user-avatar-container' style = 'background-image:url(<?=$this -> user -> big_avatar();?>);'>
-                <div class = 'grey'> <?php if($this -> config['PAGE']['params'] == $this -> user -> login) {?>style = 'cursor:pointer;'<?php }?>>
-                    <?php if($this -> config['PAGE']['params'] == $this -> user -> login) {?><img class = 'download-big-avatar' src = '/app/tmpl/img/menu/download.png'><?php }?>
+                <div class = 'grey' <?php if($this -> config['PAGE']['params'] == $this -> user -> login) {?>style = 'cursor:pointer;'<?php }?>>
+                    <?php if($this -> config['PAGE']['params'] == $this -> user -> login) {?><img class = 'download-big-avatar' onclick="showUserBannerControll('<?=$this -> user -> bannerSRC()?>')" src = '/app/tmpl/img/menu/download.png'><?php }?>
                     <div class = 'user-name'><?=$this -> user -> name . " " . $this -> user -> surname?></div>
                 </div>
             </div>
