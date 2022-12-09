@@ -4,39 +4,54 @@ class upload
 {
     public function _userBanner_()
     {
-        $uploaddir = "uploads/users/banner";
-        $files = $_FILES;
-        $done_files = [];
-        foreach($files as $file)
+        if (!empty($_FILES))
         {
-            $size = $file['size'];
-            $format = explode('.',$file['name']);
-            $format = $format[count($format) - 1];
-            $name = hash('crc32', time()) . '.' . $format;
-            $type = $file['type'];
-            $i = getimagesize($file["tmp_name"]);
-            $width = $i[0];
-            $height = $i[1];
+            $uploaddir = "uploads/users/banner";
+            $files = $_FILES;
+            $done_files = [];
+            foreach ($files as $file)
+            {
+                $size = $file['size'];
+                $format = explode('.', $file['name']);
+                $format = $format[count($format) - 1];
+                $name = hash('crc32', time()) . '.' . $format;
+                $type = $file['type'];
+                $i = getimagesize($file["tmp_name"]);
+                $width = $i[0];
+                $height = $i[1];
 
-            if($size > 99999999)
-            {
-                die( json_encode(['error', 1]) );
-            }
-            if($width >= 2560 and $height >= 1440)
-            {
-                if(move_uploaded_file($file['tmp_name'], "$uploaddir/{$_SESSION['user']['id']}_$name"))
+                if ($size > 99999999)
                 {
-                    include_once "core/controllers/DB.php";
-                    $config = include "core/config/default.php";
-                    $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-
-                    $db -> updateRow("UPDATE `users` SET `big_avatar` = ?, `bannerSRC`", ["$uploaddir/{$_SESSION['user']['id']}_$name", "$uploaddir/{$_SESSION['user']['id']}_$name"]);
-                    echo json_encode(['success',"$uploaddir/{$_SESSION['user']['id']}_$name"]);
+                    die(json_encode(['error', 1]));
                 }
-            }
+                if ($width >= 2560 and $height >= 1440)
+                {
+                    if (move_uploaded_file($file['tmp_name'], "$uploaddir/{$_SESSION['user']['id']}_$name"))
+                    {
+                        include_once "core/controllers/DB.php";
+                        $config = include "core/config/default.php";
+                        $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
 
+                        $db->updateRow("UPDATE `users` SET `big_avatar` = ?, `bannerSRC` = ? WHERE `id` = ?", ["$uploaddir/{$_SESSION['user']['id']}_$name", "$uploaddir/{$_SESSION['user']['id']}_$name",$_SESSION['user']['id']]);
+                        echo json_encode(['success', "$uploaddir/{$_SESSION['user']['id']}_$name"]);
+                    }
+                }
+
+            }
+        }else{
+            include_once "core/controllers/DB.php";
+            $config = include "core/config/default.php";
+            $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+
+            $query = $db->getRow("SELECT `bannerSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+            echo $query['bannerSRC'];
         }
     }
+
+
+
+
+
 
     public function _bannerNew_()
     {
@@ -72,7 +87,7 @@ class upload
             $config = include "core/config/default.php";
             $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
 
-            $db -> updateRow("UPDATE `users` SET `big_avatar` = ?", [$to . "/" . $name]);
+            $db -> updateRow("UPDATE `users` SET `big_avatar` = ? WHERE `id` = ?", [$to . "/" . $name, $_SESSION['user']['id']]);
             echo $to . "/" . $name;
 
         }
@@ -83,20 +98,45 @@ class upload
         include_once "core/controllers/DB.php";
         $config = include "core/config/default.php";
         $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-
-        $db -> updateRow("UPDATE `users` SET `big_avatar` = ?", ['/app/tmpl/img/avatar/matrix_nofoto.jpg']);
+        $query = $db->getRow("SELECT `big_avatar`, `bannerSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+        $db -> updateRow("UPDATE `users` SET `big_avatar` = ?, `bannerSRC` = ? WHERE `id` = ?", ['/app/tmpl/img/avatar/matrix_nofoto.jpg', '/app/tmpl/img/avatar/matrix_nofoto.jpg', $_SESSION['user']['id']]);
+        unlink($query['big_avatar']);
+        unlink($query['bannerSRC']);
     }
 
-    public function _editUserBanner_()
+    public function _newUserAvatar_()
     {
-        include_once "core/controllers/DB.php";
-        $config = include "core/config/default.php";
-        $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-
-        $db -> updateRow("UPDATE `users` SET `big_avatar` = ?", ['/app/tmpl/img/avatar/matrix_nofoto.jpg']);
+        if(!empty($_FILES))
+        {
+            include_once "core/controllers/DB.php";
+            $config = include "core/config/default.php";
+            $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+            echo 1;
+        }
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//    public function _editUserBanner_()
+//    {
+//        include_once "core/controllers/DB.php";
+//        $config = include "core/config/default.php";
+//        $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+//
+//        $db -> updateRow("UPDATE `users` SET `big_avatar` = ? WHERE `id` = ?", ['/app/tmpl/img/avatar/matrix_nofoto.jpg', $_SESSION['user']['id']]);
+//    }
+
+
 
 
 

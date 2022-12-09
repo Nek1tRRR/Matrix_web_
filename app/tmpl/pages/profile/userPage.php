@@ -11,9 +11,9 @@
                 <div class = 'user-main-avatar'>
                     <img src = '<?=$this -> user -> avatar();?>'>
                     <ul class = 'controll-avatar-block'>
-                        <li>Удалить аватар</li>
-                        <li>Изменить миниатюру</li>
-                        <li>Установить новую</li>
+                        <li onclick = 'del_avatar()'>Удалить аватар</li>
+                        <li onclick = 'edit_avatar()'>Изменить миниатюру</li>
+                        <li onclick = 'new_avatar("<?=$this -> user -> avatar()?>")'>Установить новую</li>
                     </ul>
                 </div>
                 <ul class = 'flex-between flex-middle main-menu-list'>
