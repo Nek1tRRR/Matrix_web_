@@ -58,8 +58,8 @@ var showUserBannerControll = function (img){
                 if(a[0] == 'success'){
                     $(".controll-block .img-block").html("<img src = '"+a[1]+"' id = 'banner-img'>");
                     $(".controll-block .edit-links .links-list").html(
-                        '<li id = "l-save">Сохранить</li>'+
-                        '<li id = "l-delete" onclick = "deleteUserBanner()">Удалить</li>');
+                        '<li id = "l-save"><label>Сохранить</label></li>'+
+                        '<li id = "l-delete" onclick = "deleteUserBanner()"><label>Удалить</label></li>');
                     cropBanner(a[1]);
 
                 }
@@ -91,8 +91,10 @@ var cropBanner = function (img_src){
                     url: LOCATION + 'upload?bannerNew',
                     type: "POST",
                     data: {from:img_src, to: to, top: top, left: left, width:width, height: height},
-                    success: function (a) {
-                        $('.controll-bg').css("display", 'none');
+                    success: function () {
+
+                    },
+                    complete: function () {
                         location.href = LOCATION;
                     }
                 })
@@ -106,7 +108,7 @@ var deleteUserBanner = function () {
         url: LOCATION + 'upload?deleteUserBanner',
         type: 'POST',
         success: function (){
-
+            location.href = LOCATION;
         }
     })
 }
@@ -117,74 +119,199 @@ var editUserBanner = function () {
         type: 'POST',
         success: function (img) {
             cropBanner(img);
+            $(".controll-block .edit-links .links-list").html(
+                '<li id = "l-save" ><label>Сохранить</label></li>'+
+                '<li id = "l-delete" onclick = "deleteUserBanner()"><label>Удалить</label></li>');
         }
+
     })
-    $(".controll-block .edit-links .links-list").html(
-        '<li id = "l-save">Сохранить</li>'+
-        '<li id = "l-delete" onclick = "deleteUserBanner()">Удалить</li>');
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///работа с аватаром
-var new_avatar = function (img){
+var new_avatar = function (img) {
     $('body').append(
-        '<div class = "flex-center controll-bg">'+
-            '<div class = "controll-block">'+
-                '<div class = "title-block">Добавление аватара</div>'+
-                '<div class = "avatar-block">'+
-                    '<img src = "'+img+'">'+
-                '</div>'+
-                '<div class = "edit-links">'+
-                    '<ul class = "links-list">'+
-                        '<li id = "l-download"><label>Выбрать<input type = "file" multiple="multiple" accept=".txt,image/*"  id = "userAvatar"></label></li>'+
-                '</div>'+
-            '</div>'+
+        '<div class = "flex-center controll-bg">' +
+        '<div class = "controll-block">' +
+        '<div class = "title-block">Добавление аватара</div>' +
+        '<div class = "avatar-block">' +
+        '<img src = "' + img + '">' +
+        '</div>' +
+        '<div class = "edit-links">' +
+        '<ul class = "links-list">' +
+        '<li id = "l-download"><label>Выбрать<input type = "file" data-url= "upload?newUserAvatar" multiple="multiple" accept=".txt,image/*"  id = "userAvatar"></label></li>' +
+        '</div>' +
+        '</div>' +
         '</div>'
     );
-    if(img != '/app/tmpl/img/avatar/no_signal.png') {
-        $(".controll-bg .avatar-block img").cropper({
-            zoomable: false,
-            viewMode: 1,
-            aspectRatio: 1/1,
-            autoCropArea: 1,
-            minCropBoxHeight: 100,
-            minCropBoxWidth: 100,
-            coords: this.crop,
-            crop: function (e) {
-                this.coords = {top: e.y, left: e.x, width: e.width, height: e.height};
-            },
-            cropend: function () {
-                var top = this.coords.top,
-                    left = this.coords.left,
-                    width = this.coords.width,
-                    height = this.coords.height;
-                $("#l-save").click(function () {
-                    $.ajax({
-                        url: LOCATION + 'upload?editUserAvatar',
-                        type: "POST",
-                        data: {from: img, top: top, left: left, width: width, height: height},
-                        success: function () {
-                        }
-                    })
-                })
-            }
-        });
-    }else{
-        $("#userAvatar").change(function (){
-            var send_url = $(this).attr('data-url');
-            var fd = new FormData();
-            $.ajax({
-                url: LOCATION + send_url,
-                type: 'POST',
-                data: fd,
-                processData: false,
-                contentType: false,
-                success: function (a){
-                    alert(a)
 
-                }
-            })
+    $("#send_url").change(function () {
+        var send_url = $(this).attr('data-url');
+        var fd = new FormData();
+        $.ajax({
+            url: LOCATION + send_url,
+            type: 'POST',
+            data: fd,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function (a) {
+                $(".controll-bg .avatar-block").html("<img src = '" + a[1] + "'>");
+                $(".controll-block .edit-links .links-list").
+                html(
+                    '<li id = "l-save"><label>Сохранить</label></li>' +
+                    '<li id = "l-delete" onclick = "delUserAvatar()"><label>Удалить</label></li>'
+                );
+                cropAvatar(a[1]);
+
+            }
         })
-    }
+    })
 }
+var cropAvatar = function (img) {
+    $(".controll-bg .avatar-block img").cropper({
+        zoomable: false,
+        viewMode: 1,
+        aspectRatio: 1 / 1,
+        autoCropArea: 1,
+        minCropBoxHeight: 100,
+        minCropBoxWidth: 100,
+        coords: this.crop,
+        crop: function (e) {
+            this.coords = {top: e.y, left: e.x, width: e.width, height: e.height};
+        },
+        cropend: function () {
+            var top = this.coords.top,
+                left = this.coords.left,
+                width = this.coords.width,
+                height = this.coords.height;
+            $("#l-save").click(function () {
+                $.ajax({
+                    url: LOCATION + 'upload?editUserAvatar',
+                    type: "POST",
+                    data: {from: img, top: top, left: left, width: width, height: height},
+                    success: function (a) {
+                        location.href = LOCATION;
+                    }
+                })
+            })
+        }
+    });
+}
+
+var delUserAvatar = function () {
+    $.ajax({
+        url: LOCATION + 'upload?deleteUserAvatar',
+        type: "POST",
+        success: function () {
+            location.href = LOCATION;
+        }
+    })
+}
+
+var edit_avatar = function (img){
+    $('body').append(
+        '<div class = "flex-center controll-bg">' +
+        '<div class = "controll-block">' +
+        '<div class = "title-block">Изменение аватара</div>' +
+        '<div class = "avatar-block">' +
+        '<img src = "' + img + '">' +
+        '</div>' +
+        '<div class = "edit-links">' +
+        '<ul class = "links-list">' +
+        '<li id = "l-save"><label>Сохранить</label></li>' +
+        '<li id = "l-delete" onclick = "delUserAvatar()"><label>Удалить</label></li>'+
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+    );
+    cropAvatar(img);
+
+}
+
+
+
+
+
+
+
+// $("#userAvatar").change(function () {
+//     var send_url = $(this).attr('data-url');
+//     var fd = new FormData();
+//     fd.append("userBanner", this.files[0]);
+//     $.ajax({
+//         url: LOCATION + send_url,
+//         type: 'POST',
+//         data: fd,
+//         dataType: 'json',
+//         processData: false,
+//         contentType: false,
+//         success: function (a) {
+//             $(".controll-bg .avatar-block").html("<img src = '" + a[1]+"'>");
+//             $(".controll-block .edit-links .links-list").
+//             html(
+//                 '<li id = "l-save"><label>Сохранить</label></li>' +
+//                 '<li id = "l-delete" onclick = "delUserAvatar()"><label>Удалить</label></li>'
+//             );
+//             cropAvatar(a[1]);
+//
+//         }
+//     })
+// })
+
+//         $(".controll-bg .avatar-block img").cropper({
+//             zoomable: false,
+//             viewMode: 1,
+//             aspectRatio: 1/1,
+//             autoCropArea: 1,
+//             minCropBoxHeight: 100,
+//             minCropBoxWidth: 100,
+//             coords: this.crop,
+//             crop: function (e) {
+//                 this.coords = {top: e.y, left: e.x, width: e.width, height: e.height};
+//             },
+//             cropend: function () {
+//                 var top = this.coords.top,
+//                     left = this.coords.left,
+//                     width = this.coords.width,
+//                     height = this.coords.height;
+//                 $("#l-save").click(function () {
+//                     $.ajax({
+//                         url: LOCATION + 'upload?editUserAvatar',
+//                         type: "POST",
+//                         data: {from: img, top: top, left: left, width: width, height: height},
+//                         success: function () {
+//
+//                         }
+//                     })
+//                 })
+//             }
+//         });
+//     }else{
+//         $("#userAvatar").change(function (){
+//             var send_url = $(this).attr('data-url');
+//             var fd = new FormData();
+//             fd.append("userBanner", this.files[0]);
+//             $.ajax({
+//                 url: LOCATION + send_url,
+//                 type: 'POST',
+//                 data: fd,
+//                 dataType: 'json',
+//                 processData: false,
+//                 contentType: false,
+//                 success: function (a){
+//                     if(a[0] == 'success'){
+//                         $(".controll-block .avatar-block").html("<img src = '"+a[1]+"' id = 'banner-img'>");
+//                         $(".controll-block .edit-links .links-list").html(
+//                         html
+//                         (
+//                             '<li id = "l-delete"><label>Удалить</label></li>'
+//                         );
+//                     }
+//                 }
+//             })
+//         })
+//     }
+// }

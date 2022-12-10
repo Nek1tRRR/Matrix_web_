@@ -92,7 +92,7 @@ class User
     public function big_avatar()
     {
         $query = $this -> db -> getRow("SELECT `big_avatar` FROM `users` WHERE `id` = ?", [$this -> id]);
-        return $query['big_avatar'];
+        return $this -> big_avatar = $query['big_avatar'];
     }
 
     public function bannerSRC()
@@ -105,5 +105,11 @@ class User
     {
         $query = $this -> db -> getRow("SELECT `avatar` FROM `users` WHERE `id` = ?", [$this -> id]);
         return $query['avatar'];
+    }
+
+    public function avatarSRC()
+    {
+        $query = $this -> db -> getRow("SELECT `avatarSRC` FROM `users` WHERE `id` = ?", [$this -> id]);
+        return $query['avatarSRC'];
     }
 }

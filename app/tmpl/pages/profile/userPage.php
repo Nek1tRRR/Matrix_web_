@@ -11,8 +11,8 @@
                 <div class = 'user-main-avatar'>
                     <img src = '<?=$this -> user -> avatar();?>'>
                     <ul class = 'controll-avatar-block'>
-                        <li onclick = 'del_avatar()'>Удалить аватар</li>
-                        <li onclick = 'edit_avatar()'>Изменить миниатюру</li>
+                        <li onclick = 'delUserAvatar()'>Удалить аватар</li>
+                        <li onclick = 'edit_avatar("<?=$this -> user -> avatarSRC()?>")'>Изменить миниатюру</li>
                         <li onclick = 'new_avatar("<?=$this -> user -> avatar()?>")'>Установить новую</li>
                     </ul>
                 </div>
@@ -47,7 +47,7 @@
         <div class = 'flex-between middle-main-container'>
             <div class = 'left-container'>
             <?php
-            if($this -> user -> status == 'admin' and $this -> user -> login == $this -> config['PAGE']['params']){
+            if($this -> user -> status == 'admin' and $this -> user -> login == $this -> config['PAGE']['params']) {
             ?>
                 <div class = 'white-block left-nav'>
                     <a href = ' '>Админ-панель</a>
@@ -93,7 +93,6 @@
                             <div class = 'count'>0</div>
                             <div class = 'inf'>Аудио</div>
                         </div>
-
                     </div>
                 </div>
             </div>

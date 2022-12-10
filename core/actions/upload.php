@@ -6,15 +6,25 @@ class upload
     {
         if (!empty($_FILES))
         {
-            $uploaddir = "uploads/users/banner";
+            include_once "core/controllers/DB.php";
+            $config = include "core/config/default.php";
+            $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+            $query = $db->getRow("SELECT `big_avatar`, `bannerSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+            if($query['bannerSRC'] !== '/app/tmpl/avatar/matrix_nofoto.jpg')
+            {
+                unlink($query['big_avatar']);
+                unlink($query['bannerSRC']);
+            }
+            $uploaddir = 'uploads/users/banner';
+            $uploaddir2 = 'upload/users/banner-croped';
             $files = $_FILES;
             $done_files = [];
             foreach ($files as $file)
             {
                 $size = $file['size'];
-                $format = explode('.', $file['name']);
+                $format = explode('.',$file['name']);
                 $format = $format[count($format) - 1];
-                $name = hash('crc32', time()) . '.' . $format;
+                $name = rand(11111, 99999) . '.' . $format;
                 $type = $file['type'];
                 $i = getimagesize($file["tmp_name"]);
                 $width = $i[0];
@@ -22,17 +32,13 @@ class upload
 
                 if ($size > 99999999)
                 {
-                    die(json_encode(['error', 1]));
+                    die(json_encode(['error', 1]) );
                 }
                 if ($width >= 2560 and $height >= 1440)
                 {
                     if (move_uploaded_file($file['tmp_name'], "$uploaddir/{$_SESSION['user']['id']}_$name"))
                     {
-                        include_once "core/controllers/DB.php";
-                        $config = include "core/config/default.php";
-                        $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-
-                        $db->updateRow("UPDATE `users` SET `big_avatar` = ?, `bannerSRC` = ? WHERE `id` = ?", ["$uploaddir/{$_SESSION['user']['id']}_$name", "$uploaddir/{$_SESSION['user']['id']}_$name",$_SESSION['user']['id']]);
+                        $db->updateRow("UPDATE `users` SET `big_avatar` = ?, `bannerSRC` = ? WHERE `id` = ?", ["$uploaddir2/{$_SESSION['user']['id']}_$name", "$uploaddir/{$_SESSION['user']['id']}_$name", $_SESSION['user']['id']]);
                         echo json_encode(['success', "$uploaddir/{$_SESSION['user']['id']}_$name"]);
                     }
                 }
@@ -42,54 +48,58 @@ class upload
             include_once "core/controllers/DB.php";
             $config = include "core/config/default.php";
             $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-
-            $query = $db->getRow("SELECT `bannerSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+            $query = $db -> getRow("SELECT `bannerSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
             echo $query['bannerSRC'];
         }
     }
 
-
-
-
-
-
     public function _bannerNew_()
     {
-        $image = $_POST['from'];
-        $to = 'uploads/users/banner-croped';
-        $name = explode('/', $image);
-        $name = end($name);
-        $x_o = $_POST['left'];
-        $y_o = $_POST['top'];
-        $w_o = $_POST['width'];
-        $h_o = $_POST['height'];
-
-        if (($x_o < 0) || ($y_o < 0) || ($w_o < 0) || ($h_o < 0)) {
-            echo "Некорректные входные параметры";
-            return false;
-        }else{
-            list($w_i, $h_i, $type) = getimagesize($image);
-            $types = ["", "gif", "jpeg", "png"];
-            $ext = $types[$type];
-            if ($ext) {
-                $func = 'imagecreatefrom' . $ext;
-                $img_i = $func($image);
-            }else{
-                echo 'Некорректное изображение';
-                return false;
-            }
-            $img_o = imagecreatetruecolor($w_o, $h_o);
-            imagecopy($img_o, $img_i, 0, 0, $x_o, $y_o, $w_o, $h_o);
-            $func = 'image'.$ext;
-            copy($image, $to . '/' . $name);
-            $func($img_o, $to . "/" . $name);
+        if(!empty($_POST))
+        {
             include_once "core/controllers/DB.php";
             $config = include "core/config/default.php";
             $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+            $query = $db -> getRow("SELECT `big_avatar` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+            if($query['bannerSRC'] !== '/app/tmpl/avatar/matrix_nofoto.jpg')
+            {
+                unlink($query['bannerSRC']);
+                unlink($query['big_avatar']);
+            }
+            $image = $_POST['from'];
+            $to = 'uploads/users/banner-croped';
+            $name = explode('/', $image);
+            $name = end($name);
+            $format = explode('.',$name);
+            $format = $format[count($format) - 1];
+            $name = rand(11111, 99999) . '.' . $format;
+            $x_o = $_POST['left'];
+            $y_o = $_POST['top'];
+            $w_o = $_POST['width'];
+            $h_o = $_POST['height'];
 
-            $db -> updateRow("UPDATE `users` SET `big_avatar` = ? WHERE `id` = ?", [$to . "/" . $name, $_SESSION['user']['id']]);
-            echo $to . "/" . $name;
-
+            if (($x_o < 0) || ($y_o < 0) || ($w_o < 0) || ($h_o < 0)) {
+                echo "Некорректные входные параметры";
+                return false;
+            }else{
+                list($w_i, $h_i, $type) = getimagesize($image);
+                $types = ["", "gif", "jpeg", "png"];
+                $ext = $types[$type];
+                if ($ext) {
+                    $func = 'imagecreatefrom' . $ext;
+                    $img_i = $func($image);
+                }else{
+                    echo 'Некорректное изображение';
+                    return false;
+                }
+                $img_o = imagecreatetruecolor($w_o, $h_o);
+                imagecopy($img_o, $img_i, 0, 0, $x_o, $y_o, $w_o, $h_o);
+                $func = 'image'.$ext;
+                copy($image, $to . '/' . $name);
+                $func($img_o, $to . "/" . $name);
+                $db -> updateRow("UPDATE `users` SET `big_avatar` = ? WHERE `id` = ?", [$to . "/" . $name, $_SESSION['user']['id']]);
+                echo $to . "/" . $name;
+            }
         }
     }
 
@@ -98,7 +108,7 @@ class upload
         include_once "core/controllers/DB.php";
         $config = include "core/config/default.php";
         $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-        $query = $db->getRow("SELECT `big_avatar`, `bannerSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+        $query = $db -> getRow("SELECT `big_avatar`, `bannerSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
         $db -> updateRow("UPDATE `users` SET `big_avatar` = ?, `bannerSRC` = ? WHERE `id` = ?", ['/app/tmpl/img/avatar/matrix_nofoto.jpg', '/app/tmpl/img/avatar/matrix_nofoto.jpg', $_SESSION['user']['id']]);
         unlink($query['big_avatar']);
         unlink($query['bannerSRC']);
@@ -111,29 +121,101 @@ class upload
             include_once "core/controllers/DB.php";
             $config = include "core/config/default.php";
             $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-            echo 1;
+            $uploaddir = 'uploads/users/avatar';
+            $uploaddir2 = 'uploads/users/avatar-croped';
+            $files = $_FILES;
+            foreach ($files as $file)
+            {
+                $size = $file['size'];
+                $format = explode('.',$file['name']);
+                $format = $format[count($format) - 1];
+                $name = rand(11111, 99999) . '.' . $format;
+                $type = $file['type'];
+                $i = getimagesize($file["tmp_name"]);
+                $width = $i[0];
+                $height = $i[1];
+                $query = $db -> getRow("SELECT `avatarSRC`, `avatar` FROM `users` WHERE `id` = ?", [$_SESSION['user']['user']['id']]);
+                if($query['avatarSRC'] != '/app/tmpl/img/avatar/matrix_nofoto.jpg')
+                {
+                    unlink($query['avatar']);
+                    unlink($query['avatarSRC']);
+                }
+
+                if ($size > 99999999)
+                {
+                    die(json_encode(['error', 1]) );
+                }
+                if ($width >= 100 and $height >= 100)
+                {
+                    if (move_uploaded_file($file['tmp_name'], "$uploaddir/{$_SESSION['user']['id']}_$name"))
+                    {
+                        $db->updateRow("UPDATE `users` SET `avatar` = ?, `avatarSRC` = ? WHERE `id` = ?", ["$uploaddir2/{$_SESSION['user']['id']}_$name", "$uploaddir/{$_SESSION['user']['id']}_$name", $_SESSION['user']['id']]);
+                        echo json_encode(['success', "$uploaddir/{$_SESSION['user']['id']}_$name"]);
+                    }
+                }
+            }
         }
     }
+
+    public function _editUserBanner_(){
+        if(!empty($_POST))
+        {
+            include_once "core/controllers/DB.php";
+            $config = include "core/config/default.php";
+            $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+            $image = $_POST['from'];
+            $to = 'uploads/users/avatar-croped';
+            $name = explode('/', $image);
+            $name = end($name);
+            $format = explode('.',$name);
+            $format = $format[count($format) - 1];
+            $name = rand(11111, 99999) . '.' . $format;
+            $x_o = $_POST['left'];
+            $y_o = $_POST['top'];
+            $w_o = $_POST['width'];
+            $h_o = $_POST['height'];
+            if (($x_o < 0) || ($y_o < 0) || ($w_o < 0) || ($h_o < 0)) {
+                echo "Некорректные входные параметры";
+                return false;
+            }else{
+                $query = $db -> getRow("SELECT `avatar` FROM `users` WHERE `id` = ?", [$_SESSION['user']['user']['id']]);
+                if($query['avatar'] != '/app/tmpl/img/avatar/no_signal.png' and file_exists($query['avatar']))
+                {
+                    unlink($query['avatar']);
+                }
+                list($w_i, $h_i, $type) = getimagesize($image);
+                $types = ["", "gif", "jpeg", "png"];
+                $ext = $types[$type];
+                if ($ext) {
+                    $func = 'imagecreatefrom' . $ext;
+                    $img_i = $func($image);
+                }else{
+                    echo 'Некорректное изображение';
+                    return false;
+                }
+                $img_o = imagecreatetruecolor($w_o, $h_o);
+                imagecopy($img_o, $img_i, 0, 0, $x_o, $y_o, $w_o, $h_o);
+                $func = 'image'.$ext;
+                copy($image, $to . '/' . $name);
+                $func($img_o, $to . "/" . $name);
+                $db -> updateRow("UPDATE `users` SET `avatar` = ? WHERE `id` = ?", [$to . "/" . $name, $_SESSION['user']['id']]);
+                echo $to . "/" . $name;
+            }
+        }
+    }
+
+    public function _deleteUserAvatar_(){
+        include_once "core/controllers/DB.php";
+        $config = include "core/config/default.php";
+        $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+        $query = $db -> getRow("SELECT `avatar`, `avatarSRC` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+        $db -> updateRow("UPDATE `users` SET `avatar` = ?, `avatarSRC` = ? WHERE `id` = ?", ['/app/tmpl/img/avatar/no_signal.png', '/app/tmpl/img/avatar/no_signal.png', $_SESSION['user']['id']]);
+        unlink($query['avatar']);
+        unlink($query['avatarSRC']);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//    public function _editUserBanner_()
 //    {
-//        include_once "core/controllers/DB.php";
-//        $config = include "core/config/default.php";
-//        $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
-//
-//        $db -> updateRow("UPDATE `users` SET `big_avatar` = ? WHERE `id` = ?", ['/app/tmpl/img/avatar/matrix_nofoto.jpg', $_SESSION['user']['id']]);
+
 //    }
 
 
