@@ -77,7 +77,7 @@ var cropBanner = function (img_src){
         autoCropArea: 1,
         minCropBoxHeight: 350,
         minCropBoxWidth: 1000,
-        coords: $this.crop,
+        coords: this.crop,
         crop: function (e) {
             this.coords = {top: e.y, left: e.x, width: e.width, height: e.height};
         },
@@ -127,9 +127,10 @@ var editUserBanner = function () {
     })
 }
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///работа с аватаром
+
 var new_avatar = function (img) {
     $('body').append(
         '<div class = "flex-center controll-bg">' +
@@ -169,6 +170,7 @@ var new_avatar = function (img) {
         })
     })
 }
+
 var cropAvatar = function (img) {
     $(".controll-bg .avatar-block img").cropper({
         zoomable: false,
@@ -231,8 +233,62 @@ var edit_avatar = function (img){
 
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///работа с блоком добавления новостей
+
+var  post = {
+
+    createBlock: function(){
+        if($('.hidden-block').html() == undefined) {
+
+            $('.fast-creator-block').hide();
+
+            var img_block = "<div class = 'fast-creator-block hidden-block flex-middle'>\n"+
+                "<img src = '/app/tmpl/img/menu/camera.png' title = 'Добавить фото'>\n"+
+                "<img src = '/app/tmpl/img/menu/video-camera.png' title = 'Добавить видео'>\n"+
+                "<img src = '/app/tmpl/img/menu/music.png' title = 'Добавить аудиозапись'>\n"+
+                "<img src = '/app/tmpl/img/menu/document.png' title = 'Добавить документ'>\n"+
+                '</div>'+
+                "<div class = 'submit-block'><input type = 'submit' class = 'submit' value = 'Отправить' onclick = 'post.create()'></div>";
 
 
+            var container = '<div class = "flex-between flex-middle bottom-controll">'+img_block+'</div>'
+
+            $('.input-post-block').append(container);
+        }
+    },
+    create: function (){
+        var val = $('.create-new-post-block').text();
+        $.ajax({
+            url: LOCATION + 'upload?createPost',
+            data: {text: val},
+            type: 'POST',
+            dataType: 'json',
+            success: function (a){
+                if(a[1] == 'success'){
+                    $('.input-post-block').remove();
+                    $('.fast-creator-block').show();
+                    post.update();
+                }
+            }
+        })
+    },
+    update: function (){
+        this.getData()
+    },
+    getData: function (){
+        var login = location.pathname.substr(2); //здесь было substr  вроде как надо на mb_substr поменять
+        $.ajax({
+            url: LOCATION + 'upload?getPosts',
+            data: {code: login},
+            type: 'POST',
+            success: function (a){
+
+            }
+        })
+    }
+}
 
 
 

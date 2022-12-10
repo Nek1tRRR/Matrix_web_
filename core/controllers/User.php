@@ -3,11 +3,11 @@
 class User
 {
     protected $db, $config;
-    public $id, $login, $password, $email, $name, $surname, $birthday, $status, $city;
-    public function __construct()
+    public $id, $login, $password, $email, $name, $surname, $birthday, $status, $city, $big_avatar, $avatar;
+    public function __construct($login = '')
     {
         $this -> connect();
-        $this -> id();
+        $this -> id($login);
         $this -> login();
         $this -> password();
         $this -> email();
@@ -16,8 +16,8 @@ class User
         $this -> birthday();
         $this -> status();
         $this -> city();
-//        $this -> big_avatar();
-//        $this -> avatar();
+        $this -> big_avatar();
+        $this -> avatar();
     }
 
     protected function connect()
@@ -28,17 +28,22 @@ class User
 
     }
 
-    protected function id()
+    protected function id($login)
     {
-        if(!empty($_SESSION['user']['id']))
-        {
-            if($_SESSION['page']['class'] == 'profile')
+        if(empty($login)){
+            if(!empty($_SESSION['user']['id']))
             {
-                $query = $this -> db -> getRow("SELECT `id` FROM `users` WHERE `login` = ?", [$_SESSION['page']['params']]);
-                return $this -> id = $query['id'];
-            }else{
-                return $this -> id = $_SESSION['user']['id'];
+                if($_SESSION['page']['class'] == 'profile')
+                {
+                    $query = $this -> db -> getRow("SELECT `id` FROM `users` WHERE `login` = ?", [$_SESSION['page']['params']]);
+                    return $this -> id = $query['id'];
+                }else{
+                    return $this -> id = $_SESSION['user']['id'];
+                }
             }
+        }else{
+            $query = $this -> db -> getRow("SELECT `id` FROM `users` WHERE `login` = ?", [$login]);
+            return $this -> id = $query['id'];
         }
     }
 
@@ -104,7 +109,7 @@ class User
     public function avatar()
     {
         $query = $this -> db -> getRow("SELECT `avatar` FROM `users` WHERE `id` = ?", [$this -> id]);
-        return $query['avatar'];
+        return $this -> avatar = $query['avatar'];
     }
 
     public function avatarSRC()

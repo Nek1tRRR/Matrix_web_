@@ -4,7 +4,7 @@ class upload
 {
     public function _userBanner_()
     {
-        if (!empty($_FILES))
+        if(!empty($_FILES))
         {
             include_once "core/controllers/DB.php";
             $config = include "core/config/default.php";
@@ -213,6 +213,46 @@ class upload
         unlink($query['avatar']);
         unlink($query['avatarSRC']);
     }
+
+    public function _createPost_()
+    {
+        include_once "core/controllers/DB.php";
+        $config = include "core/config/default.php";
+        $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+        $date = date("d-m-Y");
+        $time = date("G-i");
+        $query = $db -> insertRow("INSERT INTO `posts` (`id_user`,`text`,`date`,`time`) VALUES (?,?,?,?)", [$_SESSION['user']['id'], $_POST['text'], $date, $time]);
+        if($query)
+        {
+            echo json_encode(['send', 'success']);
+        }else{
+            echo json_encode(['send', 'error']);
+        }
+    }
+
+    public function _getPosts_()
+    {
+        if(!empty($_POST))
+        {
+            include_once "core/controllers/DB.php";
+            $config = include "core/config/default.php";
+            $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+            include_once "core/controllers/User.php";
+            $user = new User($_POST['login']);
+
+            $query = $db ->getRows("SELECT * FROM `posts` WHERE `id_user` = ? ORDER BY `id` DESC", [$user -> id]);
+            $count = $db ->getRow("SELECT  count(`id`) FROM `posts` WHERE `id_user` = ? ORDER BY `id` DESC", [$user -> id]);
+            $text[] = '';
+
+            for($i = 0; $i < $count['count(`id`)']; $i++)
+            {
+
+            }
+        }
+
+    }
+
+
 }
 //    {
 

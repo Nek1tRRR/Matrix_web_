@@ -95,6 +95,50 @@
                         </div>
                     </div>
                 </div>
+
+                    <!-- блок добавления постов -->
+                <div class = 'white-block' id = 'create-new-post-container'>
+                    <div class = 'flex-between'>
+                        <div class = 'user-avatar-container-min'>
+                            <a href = '<?=$this -> config['SITE']['url'] . '/' . $this -> user -> login?>'>
+                                <img src = '<?=$this -> user -> avatar?>'>
+                            </a>
+                        </div>
+                        <div class = 'input-post-block'>
+                            <div class = 'create-new-post-block' contenteditable='true' onclick = 'post.createBlock()' data-placeholder="Что нового?"></div>
+                        </div>
+                        <div class = 'fast-creator-block flex-middle'>
+                            <img src = '/app/tmpl/img/menu/camera.png' title = 'Добавить фото'>
+                            <img src = '/app/tmpl/img/menu/video-camera.png' title = 'Добавить видео'>
+                            <img src = '/app/tmpl/img/menu/music.png' title = 'Добавить аудиозапись'>
+                            <img src = '/app/tmpl/img/menu/document.png' title = 'Добавить документ'>
+                        </div>
+                    </div>
+                </div>
+                        <!-- блок вывода постов -->
+                <div class = 'white-block' id = 'post-list-container'>
+                    <div class = 'post-list-nav-block'>
+                        <ul id = 'post-list-nav' class = 'flex-middle'>
+                            <li>Все записи</li>
+                            <li>Мои записи</li>
+                        </ul>
+                    </div>
+                    <div class = 'post-block'>
+                        <?php
+                            if($this -> post -> count == 0){
+                        ?>
+                        <div class = 'flex-center empty-post-block'>
+                            <div>
+                                <img src = '<?=$this -> config['SITE']['url']?>/app/tmpl/img/matrix-png/pngegg.png'>
+                                <p>На данный момент здесь ничего нет....</p>
+                            </div>
+                        </div>
+                        <?php
+                            }
+                        ?>
+                    </div>
+                </div>
+            <!----------------------------------------------------->
             </div>
         </div>
     </div>

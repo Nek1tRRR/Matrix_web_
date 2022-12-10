@@ -6,10 +6,17 @@ $_SESSION['page']['class'] = $class = Router::classInc();       //метод в�
 $_SESSION['page']['method'] = $method = Router::methodInc();    //метод возвращающий имя подключаемого метода класса
 $_SESSION['page']['params'] = $params = Router::paramsInc();    //метод возвращающий имя параметры метода
 
-
 if($class == 'action')
 {
     $Page = 'core/actions/action.php';
+}
+elseif ($class == 'upload')
+{
+    $Page = 'core/actions/upload.php';
+}
+elseif ($class == 'post')
+{
+    $Page = 'core/controllers/Post.php';
 }else{
     include 'core/classes/Main.php';
     $Page = 'core/classes/' . $_SESSION['page']['class'] . '.php';
@@ -23,3 +30,26 @@ if(file_exists($Page))
 }else{ //если запрашивается несуществующий класс, то переход на главную страницу
     header("Location: /start");
 }
+
+//$list = ['action','upload','post'];
+//foreach ($list as $val)
+//{
+//    if ($class == $val)
+//    {
+//        $Page = 'core/actions/' . $val . '.php';
+//    } else {
+//        include_once 'core/classes/Main.php';
+//        $Page = 'core/classes/' . $_SESSION['page']['class'] . '.php';
+//    }
+//}
+//if($class == 'action')
+//{
+//    $Page = 'core/actions/action.php';
+//}
+//elseif ($class == 'upload')
+//{
+//    $Page = 'core/actions/upload.php';
+//}else{
+//    include 'core/classes/Main.php';
+//    $Page = 'core/classes/' . $_SESSION['page']['class'] . '.php';
+//}

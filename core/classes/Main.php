@@ -2,17 +2,24 @@
 
 abstract class Main
 {
-    protected $db, $config = [], $user;
+    protected $db, $config = [], $user, $post;
     public function __construct()
     {
         include "core/controllers/DB.php";
         include "core/controllers/User.php";
+        include "core/controllers/Post.php";
+
+
         $this -> config = include 'core/config/default.php';
+
+
         $this -> config['PAGE'] = ['class' => $_SESSION['page']['class'], 'method' => $_SESSION['page']['method'], 'params' => $_SESSION['page']['params']];
 
         $this -> db = new DB($this -> config['DB']['name'], $this -> config['DB']['user'], $this -> config['DB']['pass'], $this -> config['DB']['host'], $this -> config['DB']['type']);
 
         $this -> user = new User();
+        $this -> post = new Post($this -> user -> id);
+        
 
     }
     protected function header()
