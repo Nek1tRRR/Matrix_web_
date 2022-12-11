@@ -868,6 +868,28 @@ input.submit:hover {
     background-position: 15px center;
 }
 
+.user-container-id .user-avatar img{
+    width: 190px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.friends-list-block {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.friends-list-block .user-container-id {
+    margin: 10px;
+}
+
+.user-container-id .user-data-block {
+    text-align: center;
+    font-size: 14px;
+    color: #1dc116;
+}
 /*.input-block{*/
 /*    width: 100%;*/
 /*    margin: .5vw 0;*/

@@ -352,12 +352,20 @@ var friends = {
         })
     },
     dataUser: function (a){
-        $block = '';
+        var block = '';
         var i = 0;
-        for(i; $i < a.length; i++){
-
+        for(i; i < a.length; i++){
+            block = block +
+                '<div class = "user-container-id"><a href = "'+LOCATION + '@' + a[i]['login']+'">' +
+                    '<div class = "user-avatar">' +
+                        '<img src = "'+LOCATION + a[i]['avatar']+'">' +
+                    '</div>'+
+                    '<div class = "user-data-block">' +
+                        '<div class = "user-name">'+a[i]['name']+' ' + a[i]['surname']+'</div>'+
+                    '</div>'+
+                '</a></div>';
         }
-        $(".friends-list-block").html();
+        $(".friends-list-block").html(block);
     }
 }
 
