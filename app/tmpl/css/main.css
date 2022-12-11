@@ -575,6 +575,7 @@ input.submit:hover {
     cursor: text;
     padding: .3vw 1vw;
     margin: 0 .5vw;
+    font-size: 1vw;
 }
 
 .create-new-post-block:empty:not(:focus)::before {
@@ -667,8 +668,38 @@ input.submit:hover {
     color: rgb(17, 236, 7);
 }
 
+.user-name-and-date {
+    margin: 0 1vw;
+}
+
+.user-name-and-date a {
+    font-size: 1vw;
+    color: white;
+}
+
+.date-post-block {
+    font-size: .8vw;
+    color: white;
+    margin-top: .3vw;
+}
+
+.edit-post-nav img {
+    width: 1vw;
+    margin-right: 1vw;
+}
+
+.edit-post-nav img:hover{
+    cursor: pointer;
+}
+
+.text-post {
+    font-size: 1vw;
+}
+
 .input-block{
     width: 100%;
+    margin: .5vw 0;
+    margin-left: 4vw;
 }
 
 .input-post-block .create-new-post-block {

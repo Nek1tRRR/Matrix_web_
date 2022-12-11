@@ -247,14 +247,59 @@ class upload
             for($i = 0; $i < $count['count(`id`)']; $i++)
             {
 
+                $text[$i] =
+                    "<div class = 'white-block post-block' style = 'width: calc(100% - 2vw)'>
+                        <div class = 'flex-between top-block-post'>
+                            <div class = 'flex-middle user-data-post'>
+                                <div class = 'user-avatar-container-middle'>
+                                    <a href = '/@".$user -> login."'>
+                                        <img src = '".$user -> avatar."'>
+                                    </a>
+                                </div>
+                                <div class = 'user-name-and-date'>
+                                    <a href = '/@".$user -> login."'>". $user -> name . " " . $user -> surname ."</a>
+                                    <div class = 'date-post-block'>".$query[$i]['date']." в ". $query[$i]['time'] ."</div>
+                                </div>
+                            </div>
+                            <div class = 'edit-post-nav'>
+                                <img src = '/app/tmpl/img/menu/more.png'>                            
+                                <div class = 'edit-controll-post'>
+                                    <ul>
+                                        <li onclick = 'post.delete(".$query[$i]['id'].")'>Удалить</li>
+                                        <li>Изменить</li>
+                                    </ul>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class = 'text-post'>
+                            ".trim($query[$i]['text'])."
+                        </div>
+                    </div>";
             }
+            $text['count'] = $count['count(`id`)'];
+            echo json_encode($text);
         }
-
     }
 
+    public function _delPost_()
+    {
+        if(!empty($_POST['id']))
+        {
+            include_once "core/controllers/DB.php";
+            $config = include "core/config/default.php";
+            $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+            $query = $db -> deleteRow("DELETE FROM `posts` WHERE `id` = ?", [$_POST['id']]);
+            if($query)
+            {
+                echo json_encode(['send', 'success']);
+            }else{
+                echo json_encode(['send', 'error']);
+            }
+        }
+    }
 
 }
-//    {
+//   "DELETE FROM `posts` WHERE `id` = ?", [$_POST['id']]
 
 //    }
 

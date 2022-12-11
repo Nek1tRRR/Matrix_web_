@@ -65,4 +65,10 @@ class Post
         return $this -> count = $query["count(`id`)"];
     }
 
+    protected function avatarAuthor()
+    {
+        $query = $this -> db -> getRow("SELECT avatar FROM `users` WHERE `id` = ?", [$this -> id]);
+        return $this -> avatar = $query['avatar'];
+    }
+
 }

@@ -267,7 +267,8 @@ var  post = {
             dataType: 'json',
             success: function (a){
                 if(a[1] == 'success'){
-                    $('.input-post-block').remove();
+                    $('.input-post-block .create-new-post-block').text('');
+                    $('.bottom-controll').remove();
                     $('.fast-creator-block').show();
                     post.update();
                 }
@@ -275,20 +276,55 @@ var  post = {
         })
     },
     update: function (){
-        this.getData()
-    },
-    getData: function (){
-        var login = location.pathname.substr(2); //здесь было substr  вроде как надо на mb_substr поменять
+        var login = location.pathname.substr(2);
         $.ajax({
             url: LOCATION + 'upload?getPosts',
-            data: {code: login},
+            data: {login: login},
+            dataType: 'json',
             type: 'POST',
             success: function (a){
+                if(a['count'] != 0){
+                    var text = '';
+                    for(i = 0; i < a['count']; i++){
 
+                        if(i == 0) {
+                            $('#post-list-container .post-block').html(a[i]);
+                        }
+                        else {
+                            text = text + a[i];
+                        }
+                    }
+                    $('#post-list-container .post-block-list').html(text);
+                }else{
+                    $('#post-list-container .post-block').html(
+                        "<div class ='flex-center empty-post-block'>"+
+                                "<div>\n"+
+                                    "<img src = '"+LOCATION+"/app/tmpl/img/matrix-png/pngegg.png'>\n"+
+                                        "<p>На данный момент здесь ничего нет....</p>\n"+
+                                "</div>\n"+
+                            "</div>");
+                }
+            }
+        })
+    },
+    delete: function (id){
+        $.ajax({
+            url: LOCATION + 'upload?delPosts',
+            data: {id: id},
+            type: 'POST',
+            dataType: 'json',
+            success: function (a){
+                post.update()
+                console.log(a['return'])
+            },
+            error: function (a){
+                console.log(a['return'])
             }
         })
     }
 }
+
+setTimeout(post.update(), 5000);
 
 
 
