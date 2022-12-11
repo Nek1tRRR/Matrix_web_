@@ -281,7 +281,7 @@ class upload
         }
     }
 
-    public function _delPost_()
+    public function _delPosts_()
     {
         if(!empty($_POST['id']))
         {
@@ -297,6 +297,29 @@ class upload
             }
         }
     }
+
+    public function _people_()
+    {
+        if(!empty($_POST))
+        {
+            if($_POST['f'] == 'all')
+            {
+                include_once "core/controllers/DB.php";
+                $config = include "core/config/default.php";
+                $db = new DB($config['DB']['name'], $config['DB']['user'], $config['DB']['pass'], $config['DB']['host'], $config['DB']['type']);
+
+                $query = $db -> getRows("SELECT `id`, `login`, `name`, `surname`, `avatar` FROM `users` ORDER BY `id` DESC LIMIT 10");
+                $count  = $db -> getRow("SELECT count(`id`) FROM `users`");
+                $user = [];
+                for($i = 0; $i < $count['count(`id`)']; $i++)
+                {
+                    $user[$i] = ["name" => $query[$i]['name'], "id" => $query[$i]['id'], "surname" => $query[$i]['surname'], "login" => $query[$i]['login'], "avatar" => $query[$i]['avatar']];
+                }
+                echo json_encode($user);
+            }
+        }
+    }
+
 
 }
 //   "DELETE FROM `posts` WHERE `id` = ?", [$_POST['id']]

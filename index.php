@@ -17,6 +17,11 @@ elseif ($class == 'upload')
 elseif ($class == 'post')
 {
     $Page = 'core/controllers/Post.php';
+}
+elseif ($class == 'friends')
+{
+    include 'core/classes/Main.php';
+    $Page = 'core/classes/friends.php';
 }else{
     include 'core/classes/Main.php';
     $Page = 'core/classes/' . $_SESSION['page']['class'] . '.php';

@@ -4,7 +4,7 @@ class profile extends Main
 {
     public function _main_()
     {
-        if(!empty($this -> user -> id))
+        if(!empty($this -> user -> sess_id))
         {
             $this -> header ();
             $this -> module ('top-container');

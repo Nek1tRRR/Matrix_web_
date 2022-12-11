@@ -104,6 +104,10 @@ var auth = function (){
 
 }
 
+var friend = function (){
+
+}
+
 
 
 

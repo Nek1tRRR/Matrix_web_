@@ -3,7 +3,7 @@
 class User
 {
     protected $db, $config;
-    public $id, $login, $password, $email, $name, $surname, $birthday, $status, $city, $big_avatar, $avatar;
+    public $id, $sess_id, $login, $password, $email, $name, $surname, $birthday, $status, $city, $big_avatar, $avatar, $friends;
     public function __construct($login = '')
     {
         $this -> connect();
@@ -18,6 +18,8 @@ class User
         $this -> city();
         $this -> big_avatar();
         $this -> avatar();
+        $this -> sess_id();
+        $this -> friends();
     }
 
     protected function connect()
@@ -28,7 +30,17 @@ class User
 
     }
 
-    protected function id($login)
+    protected function sess_id()
+    {
+        $query = $this -> db -> getRow("SELECT `id` FROM `users` WHERE `id` = ?", [$_SESSION['user']['id']]);
+        if(!empty($query['id']))
+        {
+            $this -> sess_id = $_SESSION['user']['id'];
+        }
+
+    }
+
+    protected function id($login = '')
     {
         if(empty($login)){
             if(!empty($_SESSION['user']['id']))
@@ -116,5 +128,21 @@ class User
     {
         $query = $this -> db -> getRow("SELECT `avatarSRC` FROM `users` WHERE `id` = ?", [$this -> id]);
         return $query['avatarSRC'];
+    }
+
+    protected function friends()
+    {
+        $query = $this -> db -> getRows("SELECT `id_friend` FROM `friends` WHERE `id_user` = ? & `status` = 1", [$this -> id]);
+        $count = $this -> db -> getRow("SELECT count(`id_friend`) FROM `friends` WHERE `id_user` = ? & `status` = 1", [$this -> id]);
+        if($count['count(`id_friends`)'] != 0)
+        {
+            for($i = 0; $i < $count; $i++)
+            {
+                $friend[] = $query[$i]['id_friend'];
+            }
+            return $this -> friends = $friend;
+        }else{
+            return 0;
+        }
     }
 }

@@ -326,7 +326,42 @@ var  post = {
 
 setTimeout(post.update(), 5000);
 
+var friends = {
+    data: function (){
+        var data = $("#searching-users").val();
+        return data;
+    },
+    createBlock: function (){
+        this.users();
+    },
+    users: function (){
+        $.ajax({
+            url: LOCATION + 'upload?people',
+            data: {'f':'all', 'limit':10},
+            dataType: 'json',
+            type: 'POST',
+            success: function (a){
+                this.val(a);
+            },
+            error: function (e) {
 
+            },
+            val: function (a){
+                friends.dataUser(a);
+            }
+        })
+    },
+    dataUser: function (a){
+        $block = '';
+        var i = 0;
+        for(i; $i < a.length; i++){
+
+        }
+        $(".friends-list-block").html();
+    }
+}
+
+friends.createBlock();
 
 
 // $("#userAvatar").change(function () {
